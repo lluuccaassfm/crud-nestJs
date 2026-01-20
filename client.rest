@@ -16,9 +16,7 @@ Content-Type: application/json
 {
   "texto": "Novo recado",
   "de": "Joana",
-  "para": "João",
-  "lido": false,
-  "data": "2026-01-19T17:37:57.576Z"
+  "para": "João"
 }
 
 ### Update a message
@@ -28,10 +26,8 @@ Content-Type: application/json
 {
   "texto": "Updated recado",
   "de": "Joana",
-  "para": "João",
-  "lido": false,
-  "data": "2026-01-19T17:37:57.576Z"
+  "para": "João"
 }
 
 ### Delete a message
-DELETE {{baseUrl}}/messages/3
+DELETE {{baseUrl}}/messages/2

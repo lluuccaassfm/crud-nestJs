@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Message } from './entities/message.entity';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 
 @Injectable()
 export class MessagesService {
   private lastId = 1;
-  
+
   private messages: Message[] = [
     {
       id: 1,
@@ -24,29 +26,31 @@ export class MessagesService {
     return this.messages;
   }
 
-  findOne(id: string) {
-    const message = this.messages.find((item) => item.id === +id);
+  findOne(id: number) {
+    const message = this.messages.find((item) => item.id === id);
 
     if (message) return message;
 
     this.throwNotFountError();
   }
 
-  create(body: any) {
+  create(body: CreateMessageDto) {
     this.lastId++;
     const id = this.lastId;
     const novoRecado = {
       id,
       ...body,
+      lido: false,
+      data: new Date(),
     };
     this.messages.push(novoRecado);
 
     return novoRecado;
   }
 
-  update(id: string, body: any) {
+  update(id: number, body: UpdateMessageDto) {
     const recadoExistenteIndex = this.messages.findIndex(
-      (item) => item.id === +id,
+      (item) => item.id === id,
     );
 
     if (recadoExistenteIndex < 0) {
@@ -63,11 +67,11 @@ export class MessagesService {
     }
   }
 
-  remove(id: string) {
+  remove(id: number) {
     const recadoExistenteIndex = this.messages.findIndex(
-      item => item.id === +id,
+      (item) => item.id === id,
     );
-    
+
     if (recadoExistenteIndex < 0) {
       this.throwNotFountError();
     }
