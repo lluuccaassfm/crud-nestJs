@@ -1,0 +1,37 @@
+@baseUrl = http://127.0.0.1:3000
+
+# Messages
+### List all messages
+GET {{baseUrl}}/messages
+?limit=20
+&offset=30
+
+### Get a message
+GET {{baseUrl}}/messages/2
+
+### Create a message
+POST {{baseUrl}}/messages
+Content-Type: application/json
+
+{
+  "texto": "Novo recado",
+  "de": "Joana",
+  "para": "João",
+  "lido": false,
+  "data": "2026-01-19T17:37:57.576Z"
+}
+
+### Update a message
+PATCH {{baseUrl}}/messages/2
+Content-Type: application/json
+
+{
+  "texto": "Updated recado",
+  "de": "Joana",
+  "para": "João",
+  "lido": false,
+  "data": "2026-01-19T17:37:57.576Z"
+}
+
+### Delete a message
+DELETE {{baseUrl}}/messages/3
