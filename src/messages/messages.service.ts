@@ -2,81 +2,70 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Message } from './entities/message.entity';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MessagesService {
-  private lastId = 1;
 
-  private messages: Message[] = [
-    {
-      id: 1,
-      texto: 'Este é um recado de teste',
-      de: 'Joana',
-      para: 'João',
-      lido: false,
-      data: new Date(),
-    },
-  ];
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
+  ) {}
 
   throwNotFountError() {
     throw new NotFoundException('Message not found');
   }
 
-  findAll() {
-    return this.messages;
+  async findAll() {
+    const messages = await this.messageRepository.find();
+    return messages;
   }
 
-  findOne(id: number) {
-    const message = this.messages.find((item) => item.id === id);
+  async findOne(id: number) {
+    // const message = this.messages.find((item) => item.id === id);
+
+    const message = await this.messageRepository.findOne({
+      where: { id },
+    });
 
     if (message) return message;
 
     this.throwNotFountError();
   }
 
-  create(body: CreateMessageDto) {
-    this.lastId++;
-    const id = this.lastId;
-    const novoRecado = {
-      id,
+  async create(body: CreateMessageDto) {
+    const newMessageRequest = {
       ...body,
       lido: false,
       data: new Date(),
     };
-    this.messages.push(novoRecado);
-
-    return novoRecado;
+    const newMessage = this.messageRepository.create(newMessageRequest);
+    return this.messageRepository.save(newMessage);
   }
 
-  update(id: number, body: UpdateMessageDto) {
-    const recadoExistenteIndex = this.messages.findIndex(
-      (item) => item.id === id,
-    );
+  async update(id: number, body: UpdateMessageDto) {
+    const partialUpdateMessageDTO = {
+      lido: body?.lido,
+      texto: body?.texto,
+    };
 
-    if (recadoExistenteIndex < 0) {
-      this.throwNotFountError();
-    }
+    const message = await this.messageRepository.preload({
+      id,
+      ...partialUpdateMessageDTO,
+    });
 
-    if (recadoExistenteIndex >= 0) {
-      const recadoExistente = this.messages[recadoExistenteIndex];
+    if (!message) return this.throwNotFountError();
 
-      this.messages[recadoExistenteIndex] = {
-        ...recadoExistente,
-        ...body,
-      };
-    }
+    await this.messageRepository.save(message);
+    return message;
   }
 
-  remove(id: number) {
-    const recadoExistenteIndex = this.messages.findIndex(
-      (item) => item.id === id,
-    );
+  async remove(id: number) {
+    const message = await this.messageRepository.findOneBy({ id });
 
-    if (recadoExistenteIndex < 0) {
-      this.throwNotFountError();
-    }
+    if (!message) return this.throwNotFountError();
 
-    this.messages.splice(recadoExistenteIndex, 1);
-    return `Recado ${id} removido com sucesso!`;
+    return this.messageRepository.remove(message);
   }
 }
