@@ -30,3 +30,35 @@ Content-Type: application/json
 
 ### Delete a message
 DELETE {{baseUrl}}/messages/1
+
+
+# People
+### List all people
+GET {{baseUrl}}/person/
+?limit=10
+&offset=0
+
+### List a person
+GET {{baseUrl}}/person/1/
+
+### Create a person
+POST {{baseUrl}}/person/
+Content-Type: application/json
+
+{
+    "email": "lucas@email.com",
+    "password": "123456",
+    "nome": "Lucas"
+}
+
+### Update a person
+PATCH {{baseUrl}}/person/23
+Content-Type: application/json
+
+{
+    "password": "123456",
+    "nome": "Lucas Updated"
+}
+
+### Remove a person
+DELETE {{{baseUrl}}}/person/1

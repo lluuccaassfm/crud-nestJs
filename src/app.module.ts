@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MessagesModule } from './messages/messages.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PersonModule } from './person/person.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true, // Sincroniza com o BD. Não deve ser usado em produção
     }),
     MessagesModule,
+    PersonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
