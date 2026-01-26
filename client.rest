@@ -7,25 +7,25 @@ GET {{baseUrl}}/messages
 &offset=30
 
 ### Get a message
-GET {{baseUrl}}/messages/2
+GET {{baseUrl}}/messages/6
 
 ### Create a message
 POST {{baseUrl}}/messages
 Content-Type: application/json
 
 {
-  "texto": "Novo recado",
-  "de": "Lucas",
-  "para": "Letícia"
+  "texto": "De Letícia para Lucas",
+  "deId": 25,
+  "paraId": 26
 }
 
 ### Update a message
-PATCH {{baseUrl}}/messages/1
+PATCH {{baseUrl}}/messages/6
 Content-Type: application/json
 
 {
-  "texto": "Updated recado",
-  "lido": false
+  "texto": "Teste recado",
+  "lido": true
 }
 
 ### Delete a message
@@ -61,4 +61,4 @@ Content-Type: application/json
 }
 
 ### Remove a person
-DELETE {{{baseUrl}}}/person/1
+DELETE {{baseUrl}}/person/24

@@ -4,58 +4,95 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PersonService } from 'src/person/person.service';
 
 @Injectable()
 export class MessagesService {
-
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
+    private readonly personService: PersonService,
   ) {}
 
-  throwNotFountError() {
+  throwNotFountError(): never {
     throw new NotFoundException('Message not found');
   }
 
   async findAll() {
-    const messages = await this.messageRepository.find();
+    const messages = await this.messageRepository.find({
+      relations: ['de', 'para'],
+      order: { id: 'desc' },
+      select: {
+        de: {
+          id: true,
+          nome: true,
+        },
+        para: {
+          id: true,
+          nome: true,
+        },
+      },
+    });
     return messages;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Message> {
     // const message = this.messages.find((item) => item.id === id);
 
     const message = await this.messageRepository.findOne({
       where: { id },
+      relations: ['de', 'para'],
+      select: {
+        de: {
+          id: true,
+          nome: true,
+        },
+        para: {
+          id: true,
+          nome: true,
+        },
+      },
     });
 
-    if (message) return message;
+    if (!message) return this.throwNotFountError();
 
-    this.throwNotFountError();
+    return message;
   }
 
   async create(body: CreateMessageDto) {
+    const { deId, paraId } = body;
+
+    const de = await this.personService.findOne(deId);
+    const para = await this.personService.findOne(paraId);
+
     const newMessageRequest = {
-      ...body,
+      texto: body.texto,
+      de,
+      para,
       lido: false,
       data: new Date(),
     };
     const newMessage = this.messageRepository.create(newMessageRequest);
-    return this.messageRepository.save(newMessage);
+    await this.messageRepository.save(newMessage);
+
+    return {
+      ...newMessage,
+      de: {
+        id: newMessage.de.id,
+        nome: newMessage.de.nome,
+      },
+      para: {
+        id: newMessage.para.id,
+        nome: newMessage.para.nome,
+      },
+    };
   }
 
   async update(id: number, body: UpdateMessageDto) {
-    const partialUpdateMessageDTO = {
-      lido: body?.lido,
-      texto: body?.texto,
-    };
+    const message = await this.findOne(id);
 
-    const message = await this.messageRepository.preload({
-      id,
-      ...partialUpdateMessageDTO,
-    });
-
-    if (!message) return this.throwNotFountError();
+    message.texto = body?.texto ?? message.texto;
+    message.lido = body?.lido ?? message.lido;
 
     await this.messageRepository.save(message);
     return message;

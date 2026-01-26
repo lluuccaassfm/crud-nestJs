@@ -19,7 +19,7 @@ export class PersonService {
     private readonly personRepository: Repository<Person>,
   ) {}
 
-  private throwExceptionPersonNotFound() {
+  private throwExceptionPersonNotFound(): never {
     throw new NotFoundException('Person not found!');
   }
 
@@ -49,7 +49,7 @@ export class PersonService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Person> {
     const person = await this.personRepository.findOneBy({ id });
 
     if (!person) return this.throwExceptionPersonNotFound();
