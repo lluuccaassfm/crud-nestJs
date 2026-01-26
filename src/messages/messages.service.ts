@@ -5,6 +5,7 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PersonService } from 'src/person/person.service';
+import { PaginationDto } from 'src/common/pagination.dto';
 
 @Injectable()
 export class MessagesService {
@@ -18,10 +19,21 @@ export class MessagesService {
     throw new NotFoundException('Message not found');
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
+    const {
+      limit = 10,
+      page = 0,
+      orderBy = 'id',
+      orderDirection = 'DESC',
+    } = paginationDto;
+
+    const skip = limit * page;
+
     const messages = await this.messageRepository.find({
+      take: limit,
+      skip: skip,
       relations: ['de', 'para'],
-      order: { id: 'desc' },
+      order: { [orderBy]: orderDirection },
       select: {
         de: {
           id: true,

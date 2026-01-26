@@ -3,8 +3,10 @@
 # Messages
 ### List all messages
 GET {{baseUrl}}/messages
-?limit=20
-&offset=30
+?limit=10
+&page=0
+&orderBy=id
+&orderDirection=asc
 
 ### Get a message
 GET {{baseUrl}}/messages/6
