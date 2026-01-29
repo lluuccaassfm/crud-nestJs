@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 @Injectable()
 export class TimingConnectionInterceptor implements NestInterceptor {
@@ -14,7 +14,7 @@ export class TimingConnectionInterceptor implements NestInterceptor {
     const startTime = Date.now();
 
     return next.handle().pipe(
-      tap(() => {
+      finalize(() => {
         const elapsedTime = Date.now() - startTime;
         console.log(`A requisição levou ${elapsedTime}ms de execução`);
         console.log('TimingConnectionInterceptor - FINISH');
