@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ParseIntIdPipe } from './common/pipes/parse-int-id.pipe';
+import { TimingConnectionInterceptor } from './common/interceptors/timing-connection.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
     transform: false, // tenta transformar os tipos de dados de param e dtos
   }), 
   new ParseIntIdPipe());
+  app.useGlobalInterceptors(new TimingConnectionInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
