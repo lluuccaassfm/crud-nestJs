@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { finalize, Observable, tap } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 @Injectable()
 export class TimingConnectionInterceptor implements NestInterceptor {

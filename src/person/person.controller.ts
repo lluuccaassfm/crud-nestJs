@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PersonService } from './person.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
+import { SimpleCacheInterceptorInterceptor } from 'src/common/interceptors/simple-cache-interceptor.interceptor';
 
 @Controller('person')
+@UseInterceptors(SimpleCacheInterceptorInterceptor)
 export class PersonController {
   constructor(private readonly personService: PersonService) {}
 
