@@ -11,10 +11,10 @@ import {
 import { PersonService } from './person.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { SimpleCacheInterceptorInterceptor } from 'src/common/interceptors/simple-cache-interceptor.interceptor';
+import { SimpleCacheInterceptor } from 'src/common/interceptors/simple-cache.interceptor';
 
 @Controller('person')
-@UseInterceptors(SimpleCacheInterceptorInterceptor)
+@UseInterceptors(SimpleCacheInterceptor)
 export class PersonController {
   constructor(private readonly personService: PersonService) {}
 

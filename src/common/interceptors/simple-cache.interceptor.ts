@@ -7,7 +7,7 @@ import {
 import { Observable, of, tap } from 'rxjs';
 
 @Injectable()
-export class SimpleCacheInterceptorInterceptor implements NestInterceptor {
+export class SimpleCacheInterceptor implements NestInterceptor {
   private readonly cache = new Map();
 
   async intercept(

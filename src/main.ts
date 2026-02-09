@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ParseIntIdPipe } from './common/pipes/parse-int-id.pipe';
 import { TimingConnectionInterceptor } from './common/interceptors/timing-connection.interceptor';
+import { ChangeDataInterceptor } from './common/interceptors/change-data.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new TimingConnectionInterceptor(),
     new ErrorHandlingInterceptor(),
+    new ChangeDataInterceptor(),
   );
   await app.listen(process.env.PORT ?? 3000);
 }
