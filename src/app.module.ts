@@ -11,9 +11,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonModule } from './person/person.module';
 import { SimpleMiddleware } from './common/middlewares/simple.middleware';
 import { AnotherMiddleware } from './common/middlewares/another.middleware';
-import { APP_FILTER } from '@nestjs/core';
-import { MyExceptionFilter } from './common/filters/my-exception.filter';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ErrorExceptionFilter } from './common/filters/error-exception.filter';
+import { IsAdminGuard } from './common/guards/is-admin.guard';
 
 @Module({
   imports: [
@@ -35,20 +36,24 @@ import { ErrorExceptionFilter } from './common/filters/error-exception.filter';
     AppService,
     {
       provide: APP_FILTER,
-      useClass: MyExceptionFilter,
+      useClass: HttpExceptionFilter,
     },
     {
       provide: APP_FILTER,
       useClass: ErrorExceptionFilter,
     },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: IsAdminGuard,
+    // },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(SimpleMiddleware).forRoutes('*');
-    consumer.apply(AnotherMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL,
-    });
+    // consumer.apply(AnotherMiddleware).forRoutes({
+    //   path: '*',
+    //   method: RequestMethod.ALL,
+    // });
   }
 }

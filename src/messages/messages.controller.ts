@@ -10,6 +10,7 @@ import {
   Post,
   Query,
   Req,
+  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,18 +20,19 @@ import { UpdateMessageDto } from './dto/update-message.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interceptor';
 import type { Request } from 'express';
+import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 
 @UseInterceptors(AuthTokenInterceptor)
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @HttpCode(HttpStatus.OK)
+  // @HttpCode(HttpStatus.OK)
+  @UseGuards(IsAdminGuard)
   @Get()
   async findAll(@Query() pagination: PaginationDto, @Req() req: Request) {
     console.log('RecadosController', req['user']);
-    // return this.messagesService.findAll(pagination);
-    throw new Error('MENSAGEM');
+    return this.messagesService.findAll(pagination);
   }
 
   @Get(':id')
