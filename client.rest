@@ -10,6 +10,7 @@ GET {{baseUrl}}/messages
 
 ### Get a message
 GET {{baseUrl}}/messages/6
+Authorization: Bearer 123456
 
 ### Create a message
 POST {{baseUrl}}/messages
@@ -41,7 +42,7 @@ GET {{baseUrl}}/person/
 &offset=0
 
 ### List a person
-GET {{baseUrl}}/person/1/
+GET {{baseUrl}}/person/26/
 
 ### Create a person
 POST {{baseUrl}}/person/
