@@ -29,7 +29,8 @@ export class MessagesController {
   @Get()
   async findAll(@Query() pagination: PaginationDto, @Req() req: Request) {
     console.log('RecadosController', req['user']);
-    return this.messagesService.findAll(pagination);
+    // return this.messagesService.findAll(pagination);
+    throw new Error('MENSAGEM');
   }
 
   @Get(':id')
