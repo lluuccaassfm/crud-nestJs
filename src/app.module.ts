@@ -1,20 +1,13 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MessagesModule } from './messages/messages.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonModule } from './person/person.module';
 import { SimpleMiddleware } from './common/middlewares/simple.middleware';
-import { AnotherMiddleware } from './common/middlewares/another.middleware';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ErrorExceptionFilter } from './common/filters/error-exception.filter';
-import { IsAdminGuard } from './common/guards/is-admin.guard';
 
 @Module({
   imports: [
