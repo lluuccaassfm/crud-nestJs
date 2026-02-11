@@ -21,6 +21,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interceptor';
 import type { Request } from 'express';
 import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
+import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
 
 @UseInterceptors(AuthTokenInterceptor)
 @Controller('messages')
@@ -30,8 +31,13 @@ export class MessagesController {
   // @HttpCode(HttpStatus.OK)
   @UseGuards(IsAdminGuard)
   @Get()
-  async findAll(@Query() pagination: PaginationDto, @Req() req: Request) {
+  async findAll(
+    @Query() pagination: PaginationDto,
+    @Req() req: Request,
+    @ReqDataParam('url') url,
+  ) {
     console.log('RecadosController', req['user']);
+    console.log('Request URL: ' + url);
     return this.messagesService.findAll(pagination);
   }
 
