@@ -7,6 +7,7 @@ GET {{baseUrl}}/messages
 &page=0
 &orderBy=id
 &orderDirection=asc
+Authorization: Bearer 123456
 
 ### Get a message
 GET {{baseUrl}}/messages/6
