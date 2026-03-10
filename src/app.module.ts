@@ -8,21 +8,32 @@ import { SimpleMiddleware } from './common/middlewares/simple.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ErrorExceptionFilter } from './common/filters/error-exception.filter';
+import { ConfigModule, ConfigType } from '@nestjs/config';
+import { GlobalConfigModule } from './global-config/global-config.module';
+import globalConfig from './global-config/global.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      database: 'postgres',
-      username: 'postgres',
-      password: '123456',
-      autoLoadEntities: true, // Carrega entidades sem precisar especifica-las
-      synchronize: true, // Sincroniza com o BD. Não deve ser usado em produção
+    ConfigModule.forFeature(globalConfig),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule.forFeature(globalConfig)],
+      inject: [globalConfig.KEY],
+      useFactory: (globalConfigurations: ConfigType<typeof globalConfig>) => {
+        return {
+          type: globalConfigurations.database.type,
+          host: globalConfigurations.database.host,
+          port: globalConfigurations.database.port,
+          username: globalConfigurations.database.username,
+          database: globalConfigurations.database.database,
+          password: globalConfigurations.database.password,
+          autoLoadEntities: globalConfigurations.database.autoLoadEntities,
+          synchronize: globalConfigurations.database.synchronize,
+        };
+      },
     }),
     MessagesModule,
     PersonModule,
+    GlobalConfigModule,
   ],
   controllers: [AppController],
   providers: [
